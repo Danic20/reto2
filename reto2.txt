@@ -1,0 +1,988 @@
+package windowBuilder;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JRadioButton;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class PruebaFinal extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField userField;
+	private JTextField passField;
+	private JTable PeliculasDomingo;
+	private JTable PeliculasSabado;
+	private static JTable PeliculasDisponible;
+	private static JTable TablaSabdoAnadido;
+	private JTable TablaDomingoAnadido;
+	
+	private static JTable pelisDisponible;
+	private JTable PelisSeleccionadoSabado;
+	private JTable PelisSeleccionadoDomingo;
+	public static String [] columna = {"Genero" , "Titulo" ,"Duracion"};
+	DefaultTableModel modeloAdmin = new DefaultTableModel(peliculasArray,columna);
+	public static int RestanteSabado = 8;
+	public static int RestanteDomingo = 6;
+	public static String[][] peliculasArray = { { "Drama", "Memorias de Ana Frank", "3" },
+			{ "Drama", "Su mejor historia", "1" }, { "Comedia", "Historias lamentables", "1" },
+			{ "Comedia", "Kung Fu Yoga", "2" }, { "Comedia", "El milagro de P. Tinto", "3" },
+			{ "Terror", "El monstruo", "2" }, { "Terror", "Ouija", "1" },
+			{ "Terror", "Las brujas de Zugarramurdi", "3" }, { "Ciencia", "Arcadia", "3" },
+			{ "Ciencia", "Los ultimos dias en Marte", "1" }, { "Ciencia", "El Septimo Hijo", "2" } };
+
+	public static String peliculasSabado = "";
+	public static String peliculasDomingo = "";
+	private JPasswordField passwordField;
+	
+	String [] botones = { " Confirmar ", " Reiniciar" };
+	private JTable tablePelisS;
+
+	// Funcion para pasar ventanas
+
+	// Funcion para Peliculas segun por genero
+
+	/**
+     * Método principal que inicia la aplicación.
+     * @param args Los argumentos de la línea de comandos (no se utilizan).
+     */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					PruebaFinal frame = new PruebaFinal();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public PruebaFinal() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 867, 518);
+		contentPane = new JPanel();
+
+		// Aqui estan todos los paneles creados
+		
+		JPanel panelLogin = new JPanel();
+		panelLogin.setBounds(0, 0, 851, 479);
+		contentPane.add(panelLogin);
+		panelLogin.setLayout(null);
+
+		JPanel PanelGenero = new JPanel();
+		PanelGenero.setBounds(0, 0, 851, 479);
+		contentPane.add(PanelGenero);
+		PanelGenero.setLayout(null);
+
+		JPanel panelListaPelis = new JPanel();
+		panelListaPelis.setBounds(0, 5, 851, 474);
+		contentPane.add(panelListaPelis);
+
+		JPanel panelResumen = new JPanel();
+		panelResumen.setBounds(0, 0, 851, 479);
+		contentPane.add(panelResumen);
+		panelResumen.setLayout(null);
+		
+		JPanel ServiceMenu = new JPanel();
+		ServiceMenu.setBounds(0, 0, 851, 479);
+		contentPane.add(ServiceMenu);
+		ServiceMenu.setLayout(null);
+		
+		JPanel panelBienvenida = new JPanel();
+		panelBienvenida.setVisible(true);
+		panelLogin.setVisible(false);
+		PanelGenero.setVisible(false);
+		panelListaPelis.setVisible(false);
+		panelResumen.setVisible(false);
+		ServiceMenu.setVisible(false);
+		
+		// Panel de Bienvenida
+		// Accion para los 3 segundos de panel Bienvenida
+		panelBienvenida.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					Thread.sleep(3000);
+				} catch (Exception e1) {
+					System.out.println(e1);
+				}
+				irAPanel(panelBienvenida, panelLogin);
+			}
+		});
+
+		panelBienvenida.setBounds(0, 0, 851, 479);
+		contentPane.add(panelBienvenida);
+		panelBienvenida.setLayout(null);
+
+
+
+		//CON ESTE CODIGO CONSIGUES METER UNA IMAGEN EN EL LABEL 
+		ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("logoBienvenidaCine.png"));
+		//logo2.png
+		JLabel imgLabel = new JLabel("", imageIcon, JLabel.CENTER);
+		imgLabel.setBounds(0, 0, 851, 479);
+		imgLabel.setIcon(imageIcon);
+		panelBienvenida.add(imgLabel);
+		// Fin del Panel Bienvenida
+
+		// Panel Login con sus componentes
+		
+		
+		JLabel User = new JLabel("Usuario:");
+		User.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		User.setBounds(186, 115, 139, 34);
+		panelLogin.add(User);
+
+		JLabel Pass = new JLabel("Contraseña:");
+		Pass.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		Pass.setBounds(186, 205, 139, 34);
+		panelLogin.add(Pass);
+
+		userField = new JTextField();
+		userField.setBounds(361, 115, 233, 34);
+		panelLogin.add(userField);
+		userField.setColumns(10);
+
+		passwordField = new JPasswordField();
+		passwordField.setBounds(361, 206, 233, 34);
+		panelLogin.add(passwordField);
+		contentPane.setLayout(null);
+		contentPane.setLayout(null);
+
+		JButton btnNewButton = new JButton("Iniciar sesión ");
+		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (userField.getText().equals("admin") && passField.getText().equals("admin")) {
+					irAPanel(panelLogin, ServiceMenu);
+					userField.setText("");
+					passwordField.setText("");
+				} else if (userField.getText().equals("user") && passField.getText().equals("user")) {
+					irAPanel(panelLogin, PanelGenero);
+					userField.setText("");
+					passwordField.setText("");
+					JOptionPane.showMessageDialog(null, "Bienvenido");
+				} else {
+					JOptionPane.showMessageDialog(null, "La datos son incorrectos");
+				}
+			}
+		});
+			
+		btnNewButton.setBounds(258, 306, 258, 44);
+		panelLogin.add(btnNewButton);
+
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		
+		btnVolver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				irAPanel(panelLogin, panelBienvenida);
+			}
+		});
+		btnVolver.setBounds(55, 379, 114, 44);
+		panelLogin.add(btnVolver);
+
+
+		// Fin del Panel Login
+
+		// Panel del Lista de Generos con sus componentes
+		JRadioButton RadioDrama = new JRadioButton("Drama");
+		
+		RadioDrama.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		RadioDrama.setBounds(29, 147, 109, 23);
+		PanelGenero.add(RadioDrama);
+
+		JRadioButton RadioComedia = new JRadioButton("Comedia");
+		
+		RadioComedia.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		RadioComedia.setBounds(29, 197, 109, 23);
+		PanelGenero.add(RadioComedia);
+
+		JRadioButton RadioTerror = new JRadioButton("Terror");
+
+		RadioTerror.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		RadioTerror.setBounds(29, 247, 109, 23);
+		PanelGenero.add(RadioTerror);
+
+		JRadioButton RadioCiencia = new JRadioButton("CienciaFiccion");
+
+		RadioCiencia.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		RadioCiencia.setBounds(29, 297, 179, 23);
+		PanelGenero.add(RadioCiencia);
+		// Aqui esta para desseleccionar los RaioButtons
+		RadioDrama.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (RadioDrama.isSelected()) {
+					RadioComedia.setSelected(false);
+					RadioTerror.setSelected(false);
+					RadioCiencia.setSelected(false);
+				}
+			}
+		});
+
+		RadioComedia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (RadioComedia.isSelected()) {
+					RadioDrama.setSelected(false);
+					RadioTerror.setSelected(false);
+					RadioCiencia.setSelected(false);
+				}
+			}
+		});
+
+		RadioTerror.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (RadioTerror.isSelected()) {
+					RadioComedia.setSelected(false);
+					RadioDrama.setSelected(false);
+					RadioCiencia.setSelected(false);
+				}
+			}
+		});
+
+		RadioCiencia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				if (RadioCiencia.isSelected()) {
+					RadioComedia.setSelected(false);
+					RadioTerror.setSelected(false);
+					RadioDrama.setSelected(false);
+				}
+			}
+		});
+
+		// Las tablas de contenidos
+		DefaultTableModel modelo = new DefaultTableModel();
+		modelo.addColumn("Genero");
+		modelo.addColumn("Titulo");
+		modelo.addColumn("Tiempo");
+
+		DefaultTableModel modeloSabado = new DefaultTableModel();
+		modeloSabado.addColumn("Genero");
+		modeloSabado.addColumn("Titulo");
+		modeloSabado.addColumn("Tiempo");
+
+		DefaultTableModel modeloDomingo = new DefaultTableModel();
+		modeloDomingo.addColumn("Genero");
+		modeloDomingo.addColumn("Titulo");
+		modeloDomingo.addColumn("Tiempo");
+
+		JLabel lblNewLabel = new JLabel("Peliculas Sabado");
+		
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		lblNewLabel.setBounds(499, 48, 144, 23);
+		PanelGenero.add(lblNewLabel);
+
+		JLabel lblNewLabel_1 = new JLabel("Peliculas Domingo");
+		
+		lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		lblNewLabel_1.setBounds(499, 255, 144, 23);
+		PanelGenero.add(lblNewLabel_1);
+
+		JLabel TiempoRestanteSabado = new JLabel("Tiempo:" + " " + RestanteSabado);
+		
+		TiempoRestanteSabado.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		TiempoRestanteSabado.setBounds(695, 48, 109, 23);
+		PanelGenero.add(TiempoRestanteSabado);
+
+		JLabel TiempoRestanteDomingo = new JLabel("Tiempo:" + "" + RestanteDomingo);
+		
+		TiempoRestanteDomingo.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		TiempoRestanteDomingo.setBounds(695, 255, 109, 23);
+		PanelGenero.add(TiempoRestanteDomingo);
+
+		JScrollPane TablaSabado = new JScrollPane();
+		TablaSabado.setBounds(499, 82, 292, 148);
+		PanelGenero.add(TablaSabado);
+
+		PeliculasSabado = new JTable(modeloSabado);
+
+		JScrollPane TablaDomingo = new JScrollPane();
+		TablaDomingo.setBounds(499, 289, 292, 148);
+		PanelGenero.add(TablaDomingo);
+
+		PeliculasDomingo = new JTable(modeloDomingo);
+		TablaDomingo.setViewportView(PeliculasDomingo);
+
+		JButton VerPeliculas = new JButton("Ver Peliculas");
+		VerPeliculas.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		VerPeliculas.addActionListener(new ActionListener() {
+			// Las peliculas divido por genero segun el radiaButton que escogemos
+			public void actionPerformed(ActionEvent e) {
+				if (RadioDrama.isSelected()) {
+					limpiarTabla(modelo);
+					pelisPorGenero(modelo, "Drama");
+					irAPanel(PanelGenero, panelListaPelis);
+
+				} else if (RadioComedia.isSelected()) {
+					limpiarTabla(modelo);
+					pelisPorGenero(modelo, "Comedia");
+					irAPanel(PanelGenero, panelListaPelis);
+
+				} else if (RadioTerror.isSelected()) {
+					limpiarTabla(modelo);
+					pelisPorGenero(modelo, "Terror");
+					irAPanel(PanelGenero, panelListaPelis);
+
+				} else if (RadioCiencia.isSelected()) {
+					limpiarTabla(modelo);
+					pelisPorGenero(modelo, "Ciencia");
+					irAPanel(PanelGenero, panelListaPelis);
+
+				}
+			}
+		});
+		VerPeliculas.setBounds(276, 151, 144, 37);
+		PanelGenero.add(VerPeliculas);
+
+		JButton GeneroVolver = new JButton("Volver");
+		GeneroVolver.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		GeneroVolver.setBounds(29, 407, 131, 45);
+		GeneroVolver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				irAPanel(PanelGenero, panelLogin);
+			}
+		});
+		PanelGenero.add(GeneroVolver);
+
+		JButton BotonBienvenida = new JButton("Bienvenida");
+		BotonBienvenida.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		BotonBienvenida.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				irAPanel(PanelGenero, panelBienvenida);
+			}
+		});
+		BotonBienvenida.setBounds(29, 22, 131, 45);
+		PanelGenero.add(BotonBienvenida);
+
+		// Fin del panel de Lista Generos
+
+		// Panel de Lista de Pelis con sus
+		JLabel PeliculasPorGenero = new JLabel();
+		PeliculasPorGenero.setBounds(118, 80, 221, 32);
+		PeliculasPorGenero.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		panelListaPelis.add(PeliculasPorGenero);
+
+		JScrollPane scrollPaneResumen = new JScrollPane(PeliculasDisponible);
+		scrollPaneResumen.setBounds(221, 41, 358, 156);
+		panelListaPelis.add(scrollPaneResumen);
+
+		PeliculasDisponible = new JTable(modelo);
+		scrollPaneResumen.setViewportView(PeliculasDisponible);
+
+		JLabel AnadirSabado = new JLabel("Peliculas Sabado");
+		AnadirSabado.setFont(new Font("Times New Roman", Font.BOLD, 20));
+		AnadirSabado.setBounds(128, 249, 221, 32);
+		panelListaPelis.add(AnadirSabado);
+
+		JLabel AnadirDomingo = new JLabel("Peliculas Domingo");
+		AnadirDomingo.setFont(new Font("Times New Roman", Font.BOLD, 20));
+		AnadirDomingo.setBounds(553, 249, 221, 32);
+		panelListaPelis.add(AnadirDomingo);
+
+		JScrollPane ListaPelisSabado = new JScrollPane();
+		ListaPelisSabado.setBounds(67, 291, 282, 99);
+		panelListaPelis.add(ListaPelisSabado);
+		// Tablas para pelis añadido Sabado
+		TablaSabdoAnadido = new JTable(modeloSabado);
+		ListaPelisSabado.setViewportView(TablaSabdoAnadido);
+
+		JScrollPane ListaPelisDomingo = new JScrollPane();
+		ListaPelisDomingo.setBounds(506, 291, 282, 99);
+		panelListaPelis.add(ListaPelisDomingo);
+		// Tablas para pelis añadido Domingo
+		TablaDomingoAnadido = new JTable(modeloDomingo);
+		ListaPelisDomingo.setViewportView(TablaDomingoAnadido);
+
+		JButton ButtonAnadirS = new JButton("Añadir");
+		ButtonAnadirS.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		ButtonAnadirS.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				añadirPelis(modeloSabado);
+				if (RestanteSabado >= 0) {
+					TiempoRestanteSabado.setText("Tiempo:" + RestanteSabado);
+				} else {
+					JOptionPane.showMessageDialog(null, "No hay timepo disponible");
+				}
+
+			}
+		});
+		ButtonAnadirS.setBounds(137, 400, 156, 42);
+		panelListaPelis.add(ButtonAnadirS);
+
+		JButton ButtonAnadirD = new JButton("Añadir");
+		ButtonAnadirD.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		ButtonAnadirD.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				añadirDomingo(modeloDomingo);
+				if (RestanteDomingo >= 0) {
+					TiempoRestanteDomingo.setText("Tiempo:" + RestanteDomingo);
+				} else {
+					JOptionPane.showMessageDialog(null, "No hay timepo disponible");
+				}
+			}
+		});
+		ButtonAnadirD.setBounds(571, 400, 156, 42);
+		panelListaPelis.add(ButtonAnadirD);
+
+		panelListaPelis.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		panelListaPelis.setLayout(null);
+
+		JButton VolverGenero = new JButton("Volver");
+		VolverGenero.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		VolverGenero.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				irAPanel(panelListaPelis, PanelGenero);
+			}
+		});
+		VolverGenero.setBounds(10, 28, 156, 42);
+		panelListaPelis.add(VolverGenero);
+
+		JButton BienvenidaListaPelis = new JButton("Bienvenida");
+		BienvenidaListaPelis.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		BienvenidaListaPelis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				irAPanel(panelListaPelis, panelBienvenida);
+			}
+
+		});
+		BienvenidaListaPelis.setBounds(662, 10, 156, 42);
+		panelListaPelis.add(BienvenidaListaPelis);
+		// Fin del Panel Lista Pelis
+
+		JLabel lbPeliculasabado = new JLabel("Peliculas Sabado:" + " " + RestanteSabado);
+		lbPeliculasabado.setBounds(91, 58, 156, 23);
+		lbPeliculasabado.setFont(new Font("Times New Roman", Font.BOLD, 17));
+		panelResumen.add(lbPeliculasabado);
+
+		JLabel lblPeliculasDomingo = new JLabel("Peliculas Domingo:" + " " + RestanteDomingo);
+		lblPeliculasDomingo.setBounds(590, 58, 177, 23);
+		lblPeliculasDomingo.setFont(new Font("Times New Roman", Font.BOLD, 17));
+		panelResumen.add(lblPeliculasDomingo);
+
+		JScrollPane PelisSabadoResumen = new JScrollPane(PelisSeleccionadoSabado);
+		PelisSabadoResumen.setBounds(36, 91, 276, 130);
+		panelResumen.add(PelisSabadoResumen);
+
+		PelisSeleccionadoSabado = new JTable(modeloSabado);
+		PelisSabadoResumen.setViewportView(PelisSeleccionadoSabado);
+
+		JScrollPane PelisDomingoResumen = new JScrollPane(PelisSeleccionadoDomingo);
+		PelisDomingoResumen.setBounds(529, 91, 276, 130);
+		panelResumen.add(PelisDomingoResumen);
+
+		PelisSeleccionadoDomingo = new JTable(modeloDomingo);
+		PelisDomingoResumen.setViewportView(PelisSeleccionadoDomingo);
+
+		JLabel lblPeliculasQuePueden = new JLabel("Peliculas que pueden añadir ");
+		lblPeliculasQuePueden.setFont(new Font("Times New Roman", Font.BOLD, 17));
+		lblPeliculasQuePueden.setBounds(300, 244, 218, 23);
+		panelResumen.add(lblPeliculasQuePueden);
+
+		JScrollPane todasPelis = new JScrollPane(pelisDisponible);
+		todasPelis.setBounds(228, 275, 364, 130);
+		panelResumen.add(todasPelis);
+
+		pelisDisponible = new JTable(modelo);
+		todasPelis.setViewportView(pelisDisponible);
+
+		JButton btnAnadir = new JButton("Añadir a sabado");
+		btnAnadir.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		btnAnadir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				añadirResumenSabado(modeloSabado);
+				if(RestanteSabado >= 0) {
+					lbPeliculasabado.setText("Peliculas Sabado:" + " " + RestanteSabado);
+				}else {
+					JOptionPane.showMessageDialog(null, "No hay timepo disponible");
+				}
+			}
+		});
+		btnAnadir.setBounds(228, 415, 177, 36);
+		panelResumen.add(btnAnadir);
+
+		JButton btnAadir = new JButton("Añadir a domingo");
+		btnAadir.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		btnAadir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				añadirResumenDomingo(modeloDomingo);
+				if(RestanteDomingo>= 0) {
+					lblPeliculasDomingo.setText("Peliculas Domingo:" + " " + RestanteDomingo);
+				}else {
+					JOptionPane.showMessageDialog(null, "No hay timepo disponible");
+				}
+
+			}
+		});
+		btnAadir.setBounds(415, 415, 177, 36);
+		panelResumen.add(btnAadir);
+
+		JButton btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		btnConfirmar.setBounds(689, 382, 129, 69);
+		panelResumen.add(btnConfirmar);
+
+		JButton btnVolver1 = new JButton("Volver");
+		btnVolver1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		btnVolver1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				irAPanel(panelResumen, panelBienvenida);
+			}
+		});
+		btnVolver1.setBounds(22, 382, 129, 69);
+		panelResumen.add(btnVolver1);
+
+		JButton verResumen = new JButton("Ver Resumen ");
+		verResumen.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		verResumen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				limpiarTabla(modelo);
+				pelisResumen(modelo);
+				irAPanel(PanelGenero, panelResumen);
+				if (RestanteSabado >= 0 && RestanteDomingo >= 0) {
+					lbPeliculasabado.setText("Peliculas Sabado:" + " " + RestanteSabado);
+					lblPeliculasDomingo.setText("Peliculas Domingo:" + " " + RestanteDomingo);
+				}
+			}
+		});
+		verResumen.setBounds(276, 247, 143, 37);
+		PanelGenero.add(verResumen);
+		contentPane.setLayout(null);
+
+	
+	//Aqui empieza el service menu
+	
+		JLabel tituloAdmin = new JLabel("SERVICE MENU");
+		tituloAdmin.setHorizontalAlignment(SwingConstants.CENTER);
+		tituloAdmin.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		tituloAdmin.setBounds(274, 39, 270, 48);
+		ServiceMenu.add(tituloAdmin);
+		
+		JTextField txtTitulo1 = new JTextField();
+		txtTitulo1.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTitulo1.setText("Escribe aqui el titulo");
+		txtTitulo1.setColumns(10);
+		txtTitulo1.setBounds(527, 130, 190, 20);
+		ServiceMenu.add(txtTitulo1);
+		
+		JLabel subtitulo1 = new JLabel("Pelicula");
+		subtitulo1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		subtitulo1.setHorizontalAlignment(SwingConstants.CENTER);
+		subtitulo1.setBounds(585, 98, 66, 21);
+		ServiceMenu.add(subtitulo1);
+		
+		JLabel subtitulo2 = new JLabel("Pelicula que desea Editar");
+		subtitulo2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		subtitulo2.setBounds(550, 200, 180, 20);
+		ServiceMenu.add(subtitulo2);
+		
+		JTextField txtGenero2 = new JTextField();
+		txtGenero2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtGenero2.setText("Genero");
+		txtGenero2.setColumns(10);
+		txtGenero2.setBounds(476, 231, 86, 20);
+		ServiceMenu.add(txtGenero2);
+		
+		JTextField txtTitulo2 = new JTextField();
+		txtTitulo2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTitulo2.setText("Titulo");
+		txtTitulo2.setColumns(10);
+		txtTitulo2.setBounds(585, 231, 86, 20);
+		ServiceMenu.add(txtTitulo2);
+		
+		JTextField  txtDuracion2 = new JTextField();
+		txtDuracion2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtDuracion2.setText("Duracion");
+		txtDuracion2.setColumns(10);
+		txtDuracion2.setBounds(689, 231, 86, 20);
+		ServiceMenu.add(txtDuracion2);
+		
+		JScrollPane scrollPaneEditar = new JScrollPane(tablePelisS);
+		scrollPaneEditar.setBounds(10, 98, 456, 291);
+		ServiceMenu.add(scrollPaneEditar);
+		
+		tablePelisS = new JTable(modeloAdmin);
+		scrollPaneEditar.setColumnHeaderView(tablePelisS);
+		
+		
+		JButton botonBuscar = new JButton("Buscar");
+		botonBuscar.setBounds(574, 161, 89, 23);
+		ServiceMenu.add(botonBuscar);
+		
+		JButton botonEliminar = new JButton("Eliminar");
+		botonEliminar.setBounds(574, 161, 89, 23);
+		ServiceMenu.add(botonEliminar);
+		
+		JLabel txtAñadir = new JLabel("Pelicula que desea Añadir");
+		txtAñadir.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtAñadir.setBounds(545, 195, 180, 24);
+		ServiceMenu.add(txtAñadir);
+		
+		JButton botonAñadir = new JButton("Añadir");
+		botonAñadir.setBounds(585, 277, 89, 23);
+		ServiceMenu.add(botonAñadir);
+		
+		subtitulo1.setVisible(false);
+		txtTitulo1.setVisible(false);
+		subtitulo2.setVisible(false);
+		txtTitulo2.setVisible(false);
+		txtGenero2.setVisible(false);
+		txtDuracion2.setVisible(false);
+		botonBuscar.setVisible(false);
+		botonEliminar.setVisible(false);
+		botonAñadir.setVisible(false);
+		txtAñadir.setVisible(false);
+		
+		
+
+		//Con los newboton1,2,3 se hace visible lo que queremos que se muestre y se vuelve invisible lo que no queremos 
+		 JButton Newboton1 = new JButton("Editar");
+			Newboton1.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    	subtitulo2.setVisible(true);
+			    	subtitulo1.setVisible(true);
+			    	txtTitulo1.setVisible(true);
+			    	txtGenero2.setVisible(true);
+		            txtTitulo2.setVisible(true);
+		            txtDuracion2.setVisible(true);
+		            botonBuscar.setVisible(true);
+		            botonEliminar.setVisible(false);
+		            botonAñadir.setVisible(false);
+		    		txtAñadir.setVisible(false);
+			    }
+			}); 
+			Newboton1.setBounds(274, 413, 74, 23);
+	        ServiceMenu.add(Newboton1);
+		JButton Newboton2 = new JButton("Borrar");
+		Newboton2.setBounds(442, 413, 74, 23);
+		ServiceMenu.add(Newboton2);
+		Newboton2.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	txtGenero2.setVisible(false);
+		    	subtitulo1.setVisible(true);
+	            txtTitulo2.setVisible(false);
+	            txtDuracion2.setVisible(false);
+	            botonBuscar.setVisible(false);
+		    	txtTitulo1.setVisible(true);
+		    	botonEliminar.setVisible(true);
+		    	subtitulo2.setVisible(false);
+		    	botonAñadir.setVisible(false);
+				txtAñadir.setVisible(false);
+		    }
+		});
+		
+		JButton Newboton3 = new JButton("Añadir");
+		Newboton3.setBounds(358, 413, 74, 23);
+		ServiceMenu.add(Newboton3);
+		Newboton3.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	txtGenero2.setVisible(true);
+	            txtTitulo2.setVisible(true);
+	            txtDuracion2.setVisible(true);
+	            botonBuscar.setVisible(false);
+		    	txtTitulo1.setVisible(false);
+		    	botonEliminar.setVisible(false);
+		    	subtitulo2.setVisible(false);
+		    	botonAñadir.setVisible(true);
+				txtAñadir.setVisible(true);
+				subtitulo1.setVisible(false);			
+		    }
+		});
+		
+		JButton Newboton4 = new JButton("Cancelar");
+		Newboton4.setBounds(74, 400, 121, 48);
+		ServiceMenu.add(Newboton4);
+		Newboton4.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			irAPanel(ServiceMenu, panelLogin);}
+		});
+		
+		//Al momento de darle a confirmar nos muestra 2 mensajes si queremos que los cambios se guarden o no
+		JButton BotonConfirmar = new JButton("Confirmar");
+		BotonConfirmar.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        int ediCon = JOptionPane.showOptionDialog(null, " Confirmar cartelera editada",
+		                "Editar", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
+		                null, botones, botones[0]);
+		        //si escojemos que se guarde la funcion recorre los arrays y los cambia por lo que esta escrito en los txt
+		       
+		        if (ediCon == JOptionPane.YES_OPTION) {
+		            
+		            for (int i = 0; i < peliculasArray.length; i++) {
+		                if (peliculasArray[i][1].equals(txtTitulo1.getText())) {
+		                    peliculasArray[i][0] = txtGenero2.getText();
+		                    peliculasArray[i][1] = txtTitulo2.getText();
+		                    peliculasArray[i][2] = txtDuracion2.getText();
+		                }
+		            }
+		            //y para finalizar nos regresa al menu de login
+		            irAPanel(ServiceMenu, panelLogin);
+		        } else {
+		            irAPanel(ServiceMenu, ServiceMenu);
+		        }
+		    }
+		});
+		BotonConfirmar.setBounds(654, 400, 121, 48);
+		ServiceMenu.add(BotonConfirmar);
+		//Este boton busca el array que queremos editar por medio del titulo 
+		botonBuscar.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	String tituloEditar = txtTitulo1.getText();
+		  	  String[] detallesPelicula = obtenerDetallesPorTitulo(peliculasArray, tituloEditar);
+		      //luego de hallar el titulo lo que este escrito en los txt sera el nuevo valor del elemento del array
+		        if (detallesPelicula != null) {
+		            txtGenero2.setText(detallesPelicula[0]);
+		            txtTitulo2.setText(detallesPelicula[1]);
+		            txtDuracion2.setText(detallesPelicula[2]);			            
+		            tablePelisS.setModel(modeloAdmin);
+		        } else {
+		            JOptionPane.showMessageDialog(null, "La película con el título '" + tituloEditar + "' no se encontró.");
+		        }
+		    
+		    }});
+		botonEliminar.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	//Con el boton de eliminar es igual que el anterior 
+		    	String tituloEditar = txtTitulo1.getText();
+		        String[] detallesPelicula = obtenerDetallesPorTitulo(peliculasArray, tituloEditar);
+		        if (detallesPelicula != null) {
+		        	//pero esta vez al no haver los txt no los leera por lo que el titulo de la pelicula 
+		        	//que escojamos quedara en blanco
+		        	tablePelisS.setModel(modeloAdmin);
+		        } else {
+		            JOptionPane.showMessageDialog(null, "La película con el título '" + tituloEditar + "' no se encontró.");
+		        }
+		    }});
+		botonAñadir.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	JOptionPane.showMessageDialog(null, "Proximamente", "Lamentamos las molestias", JOptionPane.INFORMATION_MESSAGE);
+		    }});
+	}
+		    		
+		    
+		    
+	//Aui termina el service menu
+	
+	// Aqui estan los metodos para los paneles
+
+	// Metodo para cambiar el panel
+	/**
+     * Cambia de un panel a otro ocultando y mostrando los paneles correspondientes.
+     * @param panelAnterior El panel actual que se ocultará.
+     * @param panelSiguiente El panel al que se cambiará y se mostrará.
+     */
+	public static void irAPanel(JPanel panelAnterior, JPanel panelSiguiente) {
+		panelAnterior.setVisible(false);
+		panelSiguiente.setVisible(true);
+	}
+
+	// Dividir peliculas por genero
+	 /**
+     * Muestra películas según el género seleccionado.
+     * @param modelo El modelo de tabla donde se mostrarán las películas.
+     * @param genero El género de películas a mostrar.
+     */
+	public static void pelisPorGenero(DefaultTableModel modelo, String genero) {
+		for (int row = 0; row < peliculasArray.length; row++) {
+			for (int col = 0; col < peliculasArray[row].length; col++) {
+				if (peliculasArray[row][col].equals(genero)) {
+					modelo.addRow(peliculasArray[row]);
+
+				}
+
+			}
+
+		}
+
+	}
+	
+	/**
+     * Muestra un resumen de películas disponibles según el tiempo disponible para sábado y domingo.
+     * @param modelo El modelo de tabla donde se mostrará el resumen.
+     */
+	
+	public static void pelisResumen(DefaultTableModel modelo) {
+		for (int row = 0; row < peliculasArray.length; row++) {
+			int duracion = Integer.parseInt(peliculasArray[row][2]);
+			if (peliculasArray != null) {
+				if (RestanteSabado >= duracion && RestanteDomingo >= duracion) {
+					modelo.addRow(peliculasArray[row]);
+
+				}
+
+			}
+
+		}
+
+	}
+	
+	/**
+	 *  Limpia el contenido de una tabla, eliminando todas las filas.
+     * @param modelo El modelo de tabla a limpiar.
+	 */
+
+	// Metodo para resetear tablas de peliculas para que no se acomulen
+	public static void limpiarTabla(DefaultTableModel modelo) {
+		for (int i = 0; i < PeliculasDisponible.getRowCount(); i++) {
+			modelo.removeRow(i);
+			i -= 1;
+		}
+	}
+
+	// Metodos para añadir peliculas a Sabado
+	 /**
+     * Añade películas seleccionadas al día sábado y actualiza el tiempo restante.
+     * @param modeloSabado El modelo de tabla del día sábado.
+     */
+	public static void añadirPelis(DefaultTableModel modeloSabado) {
+
+		int numFilaSeleccionada = PeliculasDisponible.getSelectedRow();
+		int tiempoSupuesto = 0;
+		boolean generoEncontrado = false;
+		if (numFilaSeleccionada != -1) {
+			String pelisabado[] = { "", "", "" };
+			pelisabado[0] = (String) PeliculasDisponible.getModel().getValueAt(numFilaSeleccionada, 0);
+			pelisabado[1] = (String) PeliculasDisponible.getModel().getValueAt(numFilaSeleccionada, 1);
+			pelisabado[2] = (String) PeliculasDisponible.getModel().getValueAt(numFilaSeleccionada, 2);
+			String genero = pelisabado[0];
+			tiempoSupuesto = Integer.parseInt(pelisabado[2]);
+			RestanteSabado = RestanteSabado - tiempoSupuesto;
+			for (int row = 0; row < modeloSabado.getRowCount(); row++) {
+				if (modeloSabado.getValueAt(row, 0).equals(genero)) {
+					generoEncontrado = true;
+				}
+			}
+			if (generoEncontrado == true) {
+				JOptionPane.showMessageDialog(null, "Se repite el genero");
+			} else if (generoEncontrado == false && RestanteSabado >= 0) {
+				modeloSabado.addRow(pelisabado);
+			}
+		} else if (numFilaSeleccionada == -1) {
+			JOptionPane.showMessageDialog(null, "La pelicula no se ha añadido");
+		}
+	}
+	
+	/**
+     * Añade películas seleccionadas al día domingo y actualiza el tiempo restante.
+     * @param modeloDomingo El modelo de tabla del día domingo.
+     */
+
+	// Metodo para añadir las peliculas a Domingo
+	public static void añadirDomingo(DefaultTableModel modeloDomingo) {
+		int numFilaSeleccionada = PeliculasDisponible.getSelectedRow();
+
+		String pelidomingo[] = { "", "", "" };
+		boolean generoEncontrado = false;
+		int tiempoSupuesto = 0;
+		if (numFilaSeleccionada != -1) {
+			pelidomingo[0] = (String) PeliculasDisponible.getModel().getValueAt(numFilaSeleccionada, 0);
+			pelidomingo[1] = (String) PeliculasDisponible.getModel().getValueAt(numFilaSeleccionada, 1);
+			pelidomingo[2] = (String) PeliculasDisponible.getModel().getValueAt(numFilaSeleccionada, 2);
+			String genero = pelidomingo[0];
+			tiempoSupuesto = Integer.parseInt(pelidomingo[2]);
+			RestanteDomingo = RestanteDomingo - tiempoSupuesto;
+			for (int row = 0; row < modeloDomingo.getRowCount(); row++) {
+
+				if (modeloDomingo.getValueAt(row, 0).equals(genero)) {
+					generoEncontrado = true;
+				}
+			}
+			if (generoEncontrado == false && RestanteDomingo >= 0) {
+				modeloDomingo.addRow(pelidomingo);
+
+			} else if (generoEncontrado == true) {
+				JOptionPane.showMessageDialog(null, "Se repite el genero");
+			}
+
+		} else if (numFilaSeleccionada == -1) {
+			JOptionPane.showMessageDialog(null, "La pelicula no se ha añadido");
+		}
+	}
+
+	/**
+     * Añade películas seleccionadas al resumen del día sábado y actualiza el tiempo restante.
+     * @param modeloSabado El modelo de tabla del día sábado en el resumen.
+     */
+	
+	
+	public static void añadirResumenSabado(DefaultTableModel modeloSabado) {
+		int numFilaSeleccionada = pelisDisponible.getSelectedRow();
+		int tiempoSupuesto = 0;
+		if (numFilaSeleccionada != -1) {
+			String pelisabado[] = { "", "", "" };
+			pelisabado[0] = (String) pelisDisponible.getModel().getValueAt(numFilaSeleccionada, 0);
+			pelisabado[1] = (String) pelisDisponible.getModel().getValueAt(numFilaSeleccionada, 1);
+			pelisabado[2] = (String) pelisDisponible.getModel().getValueAt(numFilaSeleccionada, 2);
+			tiempoSupuesto = Integer.parseInt(pelisabado[2]);
+
+
+			if(tiempoSupuesto > RestanteSabado) {
+				JOptionPane.showMessageDialog(null, "La duracion de peli se supera al tiempo disponible");
+			}else {
+				modeloSabado.addRow(pelisabado);
+				RestanteSabado = RestanteSabado - tiempoSupuesto;
+			}
+
+
+		}
+	}
+	/**
+     * Añade películas seleccionadas al resumen del día domingo y actualiza el tiempo restante.
+     * @param modeloDomingo El modelo de tabla del día domingo en el resumen.
+     */
+	
+	public static void añadirResumenDomingo(DefaultTableModel modeloDomingo) {
+		int numFilaSeleccionada = pelisDisponible.getSelectedRow();
+		int tiempoSupuesto = 0;
+		if (numFilaSeleccionada != -1) {
+			String pelisdomingo[] = { "", "", "" };
+			pelisdomingo[0] = (String) pelisDisponible.getModel().getValueAt(numFilaSeleccionada, 0);
+			pelisdomingo[1] = (String) pelisDisponible.getModel().getValueAt(numFilaSeleccionada, 1);
+			pelisdomingo[2] = (String) pelisDisponible.getModel().getValueAt(numFilaSeleccionada, 2);
+			tiempoSupuesto = Integer.parseInt(pelisdomingo[2]);
+
+
+			if(tiempoSupuesto > RestanteDomingo) {
+				JOptionPane.showMessageDialog(null, "La duracion de peli se supera al tiempo disponible");
+			}else {
+				modeloDomingo.addRow(pelisdomingo);
+				RestanteDomingo = RestanteDomingo - tiempoSupuesto;
+			}
+
+
+		}
+	}
+	private String[] obtenerDetallesPorTitulo(String[][] matriz, String titulo) {
+	    for (String[] fila : matriz) {
+	        if (fila[1].equalsIgnoreCase(titulo)) {
+	            return fila; 
+	        }
+	    }
+	    return null; 
+	}
+}
